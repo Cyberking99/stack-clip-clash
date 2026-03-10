@@ -1,6 +1,6 @@
-import { ConnectWallet } from "@/components/ConnectWallet";
 import Link from "next/link";
 import "./globals.css";
+import { ClientOnlyConnect } from "@/components/ClientOnlyConnect";
 
 export const metadata = {
   title: "ClipClash | Performance Battle Platform",
@@ -28,7 +28,7 @@ export default function RootLayout({
               <Link href="/leaderboard" className="text-sm font-medium text-muted hover:text-text transition-colors">Leaderboard</Link>
             </nav>
             <div className="flex items-center gap-4">
-              <ConnectWallet />
+              <ClientOnlyConnect />
             </div>
           </div>
         </header>

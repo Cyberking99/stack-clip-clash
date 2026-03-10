@@ -3,29 +3,34 @@
 import { useEffect, useState } from "react";
 import { AppConfig, UserSession, showConnect } from "@stacks/connect";
 
-const appConfig = new AppConfig(["store_write", "publish_data"]);
-export const userSession = new UserSession({ appConfig });
+const getAppConfig = () => new AppConfig(["store_write", "publish_data"]);
+const getUserSession = () => new UserSession({ appConfig: getAppConfig() });
 
 export function ConnectWallet() {
     const [mounted, setMounted] = useState(false);
+    const [userSession, setUserSession] = useState<UserSession | null>(null);
     const [userData, setUserData] = useState<any>(null);
 
     useEffect(() => {
         setMounted(true);
-        if (userSession.isSignInPending()) {
-            userSession.handlePendingSignIn().then((userData) => {
+        const session = getUserSession();
+        setUserSession(session);
+
+        if (session.isSignInPending()) {
+            session.handlePendingSignIn().then((userData) => {
                 setUserData(userData);
             });
-        } else if (userSession.isUserSignedIn()) {
-            setUserData(userSession.loadUserData());
+        } else if (session.isUserSignedIn()) {
+            setUserData(session.loadUserData());
         }
     }, []);
 
     const connect = () => {
+        if (!userSession) return;
         showConnect({
             appDetails: {
                 name: "ClipClash MVP",
-                icon: window.location.origin + "/favicon.ico",
+                icon: typeof window !== "undefined" ? window.location.origin + "/favicon.ico" : "",
             },
             redirectTo: "/",
             onFinish: () => {
@@ -36,6 +41,7 @@ export function ConnectWallet() {
     };
 
     const disconnect = () => {
+        if (!userSession) return;
         userSession.signUserOut("/");
         setUserData(null);
     };
