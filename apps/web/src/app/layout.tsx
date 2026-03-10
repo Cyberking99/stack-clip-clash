@@ -5,6 +5,13 @@ import { ClientOnlyConnect } from "@/components/ClientOnlyConnect";
 export const metadata = {
   title: "ClipClash | Performance Battle Platform",
   description: "A decentralized 15-second performance battle platform built on the Stacks blockchain.",
+  verification: {
+    other: {
+      "talentapp:project_verification": [
+        "7b3aedcccbd0dc241c224f1024aab974650fe3c168ab450e5404e21efe0595229860a90c8a3511ac61f3d1ef0def26ea72c23a38551e6f3cc6597acf706b46ed",
+      ],
+    },
+  },
 };
 
 export default function RootLayout({
