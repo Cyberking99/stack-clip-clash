@@ -1,14 +1,23 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
+import { Typography } from '../components/Typography';
+import { Button } from '../components/Button';
+import { Swords } from 'lucide-react-native';
 
 export function ArenaScreen() {
     return (
-        <View className="flex-1 bg-background items-center justify-center p-4">
-            <Text className="text-2xl font-heading font-bold text-text mb-2 text-center">The Arena</Text>
-            <Text className="text-muted text-center">Watch and vote on the latest 15s performance battles.</Text>
-            <View className="mt-8 bg-surface border border-surface p-10 rounded-3xl w-full max-w-sm items-center">
-                <Text className="text-primary font-bold text-lg">Coming Soon</Text>
-                <Text className="text-muted text-center mt-2 text-sm italic">Video feed will be integrated in Phase 4.</Text>
+        <View className="flex-1 bg-background items-center justify-center p-6">
+            <Typography variant="h1" className="mb-2 text-center">The Arena</Typography>
+            <Typography variant="body" className="text-muted text-center mb-10">
+                Watch and vote on the latest 15s performance battles.
+            </Typography>
+            <View className="bg-surface border border-surface p-8 rounded-3xl w-full items-center shadow-xl">
+                <Swords size={48} color="#8B5CF6" className="mb-4" />
+                <Typography variant="h2" className="text-primary mb-2">Coming Soon</Typography>
+                <Typography variant="muted" className="text-center mb-6 italic">
+                    Video feed will be integrated in Phase 4.
+                </Typography>
+                <Button title="Enter Arena" className="w-full" disabled />
             </View>
         </View>
     );
