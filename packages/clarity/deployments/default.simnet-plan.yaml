@@ -66,15 +66,20 @@ plan:
       contract-name: sip-010-trait
       emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
       path: contracts/sip-010-trait.clar
-      clarity-version: 4
+      clarity-version: 2
+    - transaction-type: emulated-contract-publish
+      contract-name: battle-manager
+      emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+      path: contracts/battle-manager.clar
+      clarity-version: 2
     - transaction-type: emulated-contract-publish
       contract-name: clash-token
       emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
       path: contracts/clash-token.clar
-      clarity-version: 4
+      clarity-version: 2
     - transaction-type: emulated-contract-publish
       contract-name: user-registry
       emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
       path: contracts/user-registry.clar
-      clarity-version: 4
+      clarity-version: 2
     epoch: '3.3'
