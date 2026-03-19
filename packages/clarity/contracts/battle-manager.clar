@@ -23,9 +23,16 @@
     video1: (string-ascii 64),
     video2: (optional (string-ascii 64)),
     stake: uint,
+    votes1: uint,
+    votes2: uint,
     status: (string-ascii 16), ;; "pending", "active", "resolved"
     winner: (optional principal)
   }
+)
+
+(define-map voters
+  { battle-id: uint, voter: principal }
+  bool
 )
 
 ;; public functions
@@ -48,6 +55,8 @@
       video1: video-cid,
       video2: none,
       stake: stake,
+      votes1: u0,
+      votes2: u0,
       status: "pending",
       winner: none
     })
@@ -79,6 +88,67 @@
       video2: (some video-cid),
       status: "active"
     })))
+  )
+)
+
+;; @desc Vote for a performer in a battle
+;; @param id: Battle ID
+;; @param vote-for: 1 for performer1, 2 for performer2
+(define-public (vote (id uint) (vote-for uint))
+  (let
+    (
+      (battle (unwrap! (map-get? battles id) err-not-found))
+    )
+    ;; Check if battle is active
+    (asserts! (is-eq (get status battle) "active") err-invalid-status)
+    ;; Check if already voted
+    (asserts! (is-none (map-get? voters { battle-id: id, voter: tx-sender })) err-unauthorized)
+    
+    (map-set voters { battle-id: id, voter: tx-sender } true)
+    
+    (ok (map-set battles id (merge battle {
+      votes1: (if (is-eq vote-for u1) (+ (get votes1 battle) u1) (get votes1 battle)),
+      votes2: (if (is-eq vote-for u2) (+ (get votes2 battle) u1) (get votes2 battle))
+    })))
+  )
+)
+
+;; @desc Resolve a battle and distribute payouts
+;; @param id: Battle ID
+;; @param token: The $CLASH token contract
+(define-public (resolve-battle (id uint) (token <ft-trait>))
+  (let
+    (
+      (battle (unwrap! (map-get? battles id) err-not-found))
+      (p1 (get performer1 battle))
+      (p2 (unwrap! (get performer2 battle) err-not-found))
+      (v1 (get votes1 battle))
+      (v2 (get votes2 battle))
+      (total-stake (* (get stake battle) u2))
+    )
+    ;; Only owner can resolve for MVP
+    (asserts! (is-eq tx-sender contract-owner) err-unauthorized)
+    ;; Only active battles can be resolved
+    (asserts! (is-eq (get status battle) "active") err-invalid-status)
+    
+    (let
+      (
+        (winner (if (>= v1 v2) p1 p2))
+        (loser (if (>= v1 v2) p2 p1))
+      )
+      ;; Transfer total stake to winner
+      (try! (as-contract (contract-call? token transfer total-stake tx-sender winner none)))
+      
+      ;; Update user statistics in registry (requires same deployer/owner for current setup)
+      ;; In Phase 2, this would use a more robust authorization
+      (try! (contract-call? .user-registry update-user-stats winner true u10)) ;; +10 clout for winning
+      (try! (contract-call? .user-registry update-user-stats loser false u2)) ;; +2 clout for participating
+      
+      (ok (map-set battles id (merge battle {
+        status: "resolved",
+        winner: (some winner)
+      })))
+    )
   )
 )
 
