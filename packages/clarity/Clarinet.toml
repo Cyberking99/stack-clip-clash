@@ -5,19 +5,24 @@ authors = []
 telemetry = false
 cache_dir = './.cache'
 requirements = []
+[contracts.battle-manager]
+path = 'contracts/battle-manager.clar'
+clarity_version = 2
+epoch = 'latest'
+
 [contracts.clash-token]
 path = 'contracts/clash-token.clar'
-clarity_version = 4
+clarity_version = 2
 epoch = 'latest'
 
 [contracts.sip-010-trait]
 path = 'contracts/sip-010-trait.clar'
-clarity_version = 4
+clarity_version = 2
 epoch = 'latest'
 
 [contracts.user-registry]
 path = 'contracts/user-registry.clar'
-clarity_version = 4
+clarity_version = 2
 epoch = 'latest'
 [repl.analysis]
 passes = ['check_checker']
