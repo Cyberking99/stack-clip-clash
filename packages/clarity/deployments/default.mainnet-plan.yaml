@@ -1,0 +1,39 @@
+---
+id: 0
+name: Mainnet deployment
+network: mainnet
+stacks-node: "https://api.hiro.so"
+bitcoin-node: "http://blockstack:blockstacksystem@bitcoin.blockstack.com:8332"
+plan:
+  batches:
+    - id: 0
+      transactions:
+        - contract-publish:
+            contract-name: sip-010-trait
+            expected-sender: SP34HE2KF7SPKB8BD5GY39SG7M207FZPRXJS4NMY9
+            cost: 100000
+            path: contracts/sip-010-trait.clar
+            anchor-block-only: true
+            clarity-version: 2
+        - contract-publish:
+            contract-name: user-registry
+            expected-sender: SP34HE2KF7SPKB8BD5GY39SG7M207FZPRXJS4NMY9
+            cost: 100000
+            path: contracts/user-registry.clar
+            anchor-block-only: true
+            clarity-version: 2
+        - contract-publish:
+            contract-name: battle-manager
+            expected-sender: SP34HE2KF7SPKB8BD5GY39SG7M207FZPRXJS4NMY9
+            cost: 100000
+            path: contracts/battle-manager.clar
+            anchor-block-only: true
+            clarity-version: 2
+        - contract-publish:
+            contract-name: clash-token
+            expected-sender: SP34HE2KF7SPKB8BD5GY39SG7M207FZPRXJS4NMY9
+            cost: 100000
+            path: contracts/clash-token.clar
+            anchor-block-only: true
+            clarity-version: 2
+      epoch: "3.3"
