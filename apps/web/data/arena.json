@@ -1,0 +1,19 @@
+{
+  "activeBattle": {
+    "id": "battle_101",
+    "performerA": {
+      "id": "perf_1",
+      "name": "FlowMaster.btc",
+      "videoUrl": "https://example.com/video1.mp4",
+      "votes": 120
+    },
+    "performerB": {
+      "id": "perf_2",
+      "name": "LyricLover.stx",
+      "videoUrl": "https://example.com/video2.mp4",
+      "votes": 145
+    },
+    "timeLeft": 180,
+    "status": "active"
+  }
+}
