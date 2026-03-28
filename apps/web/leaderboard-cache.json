@@ -1,0 +1,66 @@
+[
+  {
+    "rank": 1,
+    "name": "FlowMaster.btc",
+    "address": "SP1X...A1",
+    "wins": 42,
+    "clout": 2500,
+    "trend": "up"
+  },
+  {
+    "rank": 2,
+    "name": "VibeCheck.stx",
+    "address": "SP2Y...B2",
+    "wins": 38,
+    "clout": 2100,
+    "trend": "stable"
+  },
+  {
+    "rank": 3,
+    "name": "LyricLover.btc",
+    "address": "SP3Z...C3",
+    "wins": 35,
+    "clout": 1950,
+    "trend": "up"
+  },
+  {
+    "rank": 4,
+    "name": "BeatBoxer.stx",
+    "address": "SP4W...D4",
+    "wins": 29,
+    "clout": 1800,
+    "trend": "down"
+  },
+  {
+    "rank": 5,
+    "name": "StreetDance.btc",
+    "address": "SP5V...E5",
+    "wins": 25,
+    "clout": 1650,
+    "trend": "up"
+  },
+  {
+    "rank": 6,
+    "name": "Anonymous",
+    "address": "SP6U...F6",
+    "wins": 22,
+    "clout": 1400,
+    "trend": "stable"
+  },
+  {
+    "rank": 7,
+    "name": "ClipKing.stx",
+    "address": "SP7T...G7",
+    "wins": 18,
+    "clout": 1200,
+    "trend": "down"
+  },
+  {
+    "rank": 8,
+    "name": "RhymeGenius.btc",
+    "address": "SP8S...H8",
+    "wins": 15,
+    "clout": 1100,
+    "trend": "up"
+  }
+]
