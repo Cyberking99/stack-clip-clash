@@ -10,6 +10,7 @@ import {
   BATTLE_MANAGER_CONTRACT, 
   NETWORK 
 } from "@/lib/constants";
+import VideoPlayer from "@/components/Arena/VideoPlayer";
 
 interface Performer {
   id: string;
@@ -157,12 +158,7 @@ export default function ArenaPage() {
         
         {/* Performer A */}
         <div className="group relative w-full overflow-hidden rounded-3xl border-2 border-white/5 bg-white/5 transition-all hover:border-[#FF3D00]/50 lg:w-[45%]">
-            <div className="aspect-[9/16] bg-black">
-                {/* Video Placeholder */}
-                <div className="flex h-full w-full items-center justify-center bg-zinc-900 border-b border-white/5">
-                    <span className="text-zinc-700">Video: {battle.performerA.name}</span>
-                </div>
-            </div>
+            <VideoPlayer url={battle.performerA.videoUrl} />
             
             <div className="p-6">
                 <div className="mb-4 flex items-center justify-between">
@@ -192,12 +188,7 @@ export default function ArenaPage() {
 
         {/* Performer B */}
         <div className="group relative w-full overflow-hidden rounded-3xl border-2 border-white/5 bg-white/5 transition-all hover:border-[#8A2BE2]/50 lg:w-[45%]">
-            <div className="aspect-[9/16] bg-black">
-                 {/* Video Placeholder */}
-                <div className="flex h-full w-full items-center justify-center bg-zinc-900 border-b border-white/5">
-                    <span className="text-zinc-700">Video: {battle.performerB.name}</span>
-                </div>
-            </div>
+            <VideoPlayer url={battle.performerB.videoUrl} />
             
             <div className="p-6">
                 <div className="mb-4 flex items-center justify-between">
