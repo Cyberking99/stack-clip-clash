@@ -2,6 +2,14 @@
 
 import React, { useState, useEffect } from "react";
 import { useStacks } from "@/providers/StacksProvider";
+import { useClashBalance } from "@/hooks/useClashBalance";
+import { openContractCall } from "@stacks/connect";
+import { Cl } from "@stacks/transactions";
+import { 
+  CONTRACT_ADDRESS, 
+  BATTLE_MANAGER_CONTRACT, 
+  NETWORK 
+} from "@/lib/constants";
 
 interface Performer {
   id: string;
@@ -14,6 +22,8 @@ interface Performer {
 export default function ArenaPage() {
   const { userData } = useStacks();
   const address = userData?.profile?.stxAddress?.mainnet || userData?.profile?.stxAddress?.testnet;
+  const { balance, loading: balanceLoading } = useClashBalance(address);
+
   const [battle, setBattle] = useState<{
     id: string;
     performerA: Performer;
@@ -23,8 +33,10 @@ export default function ArenaPage() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [hasVoted, setHasVoted] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     async function fetchBattle() {
       try {
         const response = await fetch("/api/arena");
@@ -54,27 +66,41 @@ export default function ArenaPage() {
       return;
     }
 
-    try {
-      const response = await fetch("/api/arena", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ battleId: battle?.id, performerId }),
-      });
+    const voteFor = performerId === battle?.performerA.id ? 1 : 2;
 
-      if (response.ok) {
-        const updatedBattle = await response.json();
-        setBattle(updatedBattle);
-        setHasVoted(true);
-      } else {
-        const error = await response.json();
-        alert(`Error voting: ${error.error}`);
-      }
-    } catch (error) {
-      console.error("Voting failed:", error);
-    }
+    openContractCall({
+      contractAddress: CONTRACT_ADDRESS,
+      contractName: BATTLE_MANAGER_CONTRACT,
+      functionName: "vote",
+      functionArgs: [
+        Cl.uint(parseInt(battle?.id.split("_")[1] || "0")),
+        Cl.uint(voteFor)
+      ],
+      network: NETWORK,
+      onFinish: async (data) => {
+        console.log("Vote Transaction sent:", data);
+        
+        // Update local cache and state immediately for better UX
+        try {
+          const response = await fetch("/api/arena", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ battleId: battle?.id, performerId }),
+          });
+
+          if (response.ok) {
+            const updatedBattle = await response.json();
+            setBattle(updatedBattle);
+            setHasVoted(true);
+          }
+        } catch (error) {
+          console.error("Failed to update local cache:", error);
+        }
+      },
+    });
   };
 
-  if (isLoading) {
+  if (isLoading || !mounted) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#050510]">
         <div className="h-16 w-16 animate-spin rounded-full border-4 border-[#FF3D00] border-t-transparent"></div>
@@ -97,10 +123,32 @@ export default function ArenaPage() {
         </h1>
         <p className="text-gray-400">Battle #{battle.id.split("_")[1]} is heating up!</p>
         
-        {/* Timer */}
-        <div className="mt-4 inline-flex items-center rounded-full bg-white/5 px-6 py-2 border border-white/10">
-          <span className="mr-2 h-2 w-2 animate-pulse rounded-full bg-red-500"></span>
-          <span className="font-mono text-xl">{Math.floor(battle.timeLeft / 60)}:{(battle.timeLeft % 60).toString().padStart(2, '0')}</span>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
+            {/* Timer */}
+            <div className="inline-flex items-center rounded-full bg-white/5 px-6 py-2 border border-white/10">
+                <span className="mr-2 h-2 w-2 animate-pulse rounded-full bg-red-500"></span>
+                <span className="font-mono text-xl">{Math.floor(battle.timeLeft / 60)}:{(battle.timeLeft % 60).toString().padStart(2, '0')}</span>
+            </div>
+
+            {/* Token Balance */}
+            {address && (
+                <div className="inline-flex items-center rounded-full bg-primary/10 px-6 py-2 border border-primary/20">
+                    <span className="mr-2 text-primary font-bold">$CLASH:</span>
+                    <span className="font-mono text-xl">
+                        {balanceLoading ? "..." : (balance / 1000000).toLocaleString()}
+                    </span>
+                </div>
+            )}
+
+            {/* Connect Wallet if not connected */}
+            {!address && (
+                <button 
+                    onClick={() => window.location.href = '/'}
+                    className="inline-flex items-center rounded-full bg-primary px-6 py-2 border border-primary/20 font-bold hover:bg-primary/80 transition-all"
+                >
+                    Connect Wallet to Vote
+                </button>
+            )}
         </div>
       </div>
 
