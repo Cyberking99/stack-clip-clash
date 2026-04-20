@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { TabNavigator } from './src/navigation/TabNavigator';
 import { StacksProvider } from './src/providers/StacksProvider';
+import { ToastProvider } from './src/providers/ToastProvider';
+import { ErrorBoundary } from './src/components/ErrorBoundary';
 import { StatusBar } from 'expo-status-bar';
 import * as Font from 'expo-font';
 import { Inter_400Regular, Inter_600SemiBold, Inter_700Bold } from '@expo-google-fonts/inter';
@@ -36,9 +38,15 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <TabNavigator />
-      <StatusBar style="light" />
-    </NavigationContainer>
+    <StacksProvider>
+      <ToastProvider>
+        <ErrorBoundary>
+          <NavigationContainer>
+            <TabNavigator />
+            <StatusBar style="light" />
+          </NavigationContainer>
+        </ErrorBoundary>
+      </ToastProvider>
+    </StacksProvider>
   );
 }

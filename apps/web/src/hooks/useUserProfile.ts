@@ -53,7 +53,7 @@ export function useUserProfile(address: string) {
         // Stacks.js v7 cvToValue for tuples might return { value: ... } for each field or direct values
         const extractNum = (val: any) => {
           if (val === null || val === undefined) return 0;
-          if (typeof val === 'object' && 'value' in val) return Number(val.value);
+          if (typeof val === 'object' && val !== null && 'value' in val) return Number((val as { value: any }).value);
           return Number(val);
         };
 

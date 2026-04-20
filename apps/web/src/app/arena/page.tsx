@@ -11,6 +11,7 @@ import {
   NETWORK 
 } from "@/lib/constants";
 import VideoPlayer from "@/components/Arena/VideoPlayer";
+import { useToast } from "@/providers/ToastProvider";
 
 interface Performer {
   id: string;
@@ -22,6 +23,7 @@ interface Performer {
 
 export default function ArenaPage() {
   const { userData } = useStacks();
+  const { showToast } = useToast();
   const address = userData?.profile?.stxAddress?.mainnet || userData?.profile?.stxAddress?.testnet;
   const { balance, loading: balanceLoading } = useClashBalance(address);
 
@@ -63,7 +65,7 @@ export default function ArenaPage() {
 
   const handleVote = async (performerId: string) => {
     if (!address) {
-      alert("Please connect your wallet to vote!");
+      showToast("Please connect your wallet to vote!", "error");
       return;
     }
 
@@ -89,14 +91,16 @@ export default function ArenaPage() {
             body: JSON.stringify({ battleId: battle?.id, performerId }),
           });
 
-          if (response.ok) {
-            const updatedBattle = await response.json();
-            setBattle(updatedBattle);
-            setHasVoted(true);
+            if (response.ok) {
+              const updatedBattle = await response.json();
+              setBattle(updatedBattle);
+              setHasVoted(true);
+              showToast("Vote cast successfully! 🗳️", "success");
+            }
+          } catch (error) {
+            showToast("Failed to update battle status", "error");
+            console.error("Failed to update local cache:", error);
           }
-        } catch (error) {
-          console.error("Failed to update local cache:", error);
-        }
       },
     });
   };

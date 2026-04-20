@@ -5,7 +5,7 @@ import { VideoPlayer } from '../components/VideoPlayer';
 import { Swords, Zap, Flame } from 'lucide-react-native';
 import { fetchArenaData } from '../lib/api';
 import { useStacks } from '../hooks/useStacks';
-import { Toast } from '../components/Toast';
+import { useToast } from '../providers/ToastProvider';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -26,10 +26,10 @@ interface Battle {
 
 export function ArenaScreen() {
     const { userData } = useStacks();
+    const { showToast } = useToast();
     const [battle, setBattle] = useState<Battle | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [hasVoted, setHasVoted] = useState(false);
-    const [showToast, setShowToast] = useState(false);
 
     useEffect(() => {
         async function loadBattle() {
@@ -53,7 +53,7 @@ export function ArenaScreen() {
         
         // Mock success for local UI feedback
         setHasVoted(true);
-        setShowToast(true);
+        showToast("Vote cast successfully! 🗳️", "success");
         // In a real app, this would call the API POST /api/arena
     };
 
@@ -134,12 +134,7 @@ export function ArenaScreen() {
                 </View>
             </View>
 
-            {showToast && (
-                <Toast 
-                    message="Vote cast successfully! 🗳️" 
-                    onHide={() => setShowToast(false)} 
-                />
-            )}
+            </View>
         </ScrollView>
     );
 }

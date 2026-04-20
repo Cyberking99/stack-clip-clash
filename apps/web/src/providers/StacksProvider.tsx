@@ -18,9 +18,11 @@ const StacksContext = createContext<StacksContextType | undefined>(undefined);
 
 export function StacksProvider({ children }: { children: ReactNode }) {
   const [userData, setUserData] = useState<UserData | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     if (userSession.isSignInPending()) {
       userSession.handlePendingSignIn().then((data) => {
