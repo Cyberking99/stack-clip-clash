@@ -2,6 +2,7 @@ import "./global.css";
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { TabNavigator } from './src/navigation/TabNavigator';
+import { StacksProvider } from './src/providers/StacksProvider';
 import { StatusBar } from 'expo-status-bar';
 import * as Font from 'expo-font';
 import { Inter_400Regular, Inter_600SemiBold, Inter_700Bold } from '@expo-google-fonts/inter';

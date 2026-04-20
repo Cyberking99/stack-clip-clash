@@ -3,9 +3,10 @@ import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { Typography } from '../components/Typography';
 import { Button } from '../components/Button';
 import { User, Trophy, ShieldCheck, Zap, ExternalLink } from 'lucide-react-native';
+import { useStacks } from '../hooks/useStacks';
 
 export function ProfileScreen() {
-    const [isConnected, setIsConnected] = useState(false);
+    const { userData, connectWallet, disconnectWallet, isLoading: isSessionLoading } = useStacks();
 
     // Mock stats
     const stats = {
@@ -24,7 +25,15 @@ export function ProfileScreen() {
         </View>
     );
 
-    if (!isConnected) {
+    if (isSessionLoading) {
+        return (
+            <View className="flex-1 bg-background items-center justify-center">
+                <ActivityIndicator size="large" color="#FF3D00" />
+            </View>
+        );
+    }
+
+    if (!userData) {
         return (
             <View className="flex-1 bg-background items-center justify-center p-6">
                 <View className="w-24 h-24 rounded-full bg-accent/20 items-center justify-center mb-6">
@@ -37,7 +46,7 @@ export function ProfileScreen() {
                 <Button 
                     title="Connect Wallet" 
                     className="w-full h-16 rounded-2xl" 
-                    onPress={() => setIsConnected(true)} 
+                    onPress={connectWallet} 
                 />
             </View>
         );
@@ -54,7 +63,9 @@ export function ProfileScreen() {
                         </View>
                     </View>
                     <Typography variant="h1">{stats.bns}</Typography>
-                    <Typography variant="muted" className="mb-2 font-mono">{stats.address}</Typography>
+                    <Typography variant="muted" className="mb-2 font-mono">
+                        {userData.address.substring(0, 6)}...{userData.address.substring(userData.address.length - 4)}
+                    </Typography>
                     
                     <View className="bg-accent/10 px-4 py-1 rounded-full border border-accent/20 flex-row items-center">
                         <ShieldCheck size={12} color="#FF3D00" className="mr-1" />
@@ -101,7 +112,7 @@ export function ProfileScreen() {
                     </TouchableOpacity>
                     <TouchableOpacity 
                         className="flex-row items-center justify-between p-4"
-                        onPress={() => setIsConnected(false)}
+                        onPress={disconnectWallet}
                     >
                         <Typography variant="body" className="text-red-500">Sign Out</Typography>
                         <Zap size={16} color="#EF4444" />
